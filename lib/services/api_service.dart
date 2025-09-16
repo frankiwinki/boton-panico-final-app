@@ -4,14 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = 'https://backend.botonph.com/api';
+  final String baseUrl = 'http://localhost:8001/api';
 
   Future<bool> login(String email, String password) async {
     final url = Uri.parse('$baseUrl/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
+      body: jsonEncode({'num_doc': email, 'password': password}),
     );
 
     if (response.statusCode == 200) {
@@ -82,7 +82,7 @@ class ApiService {
   }
 
   Future<List<Map<String, dynamic>>> getDepartamentos() async {
-    final response = await getConToken('departamentos');
+    final response = await getConToken('ubigeo/departamentos');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return List<Map<String, dynamic>>.from(data);
@@ -91,7 +91,7 @@ class ApiService {
   }
 
   Future<List<Map<String, dynamic>>> getProvincias(String depId) async {
-    final response = await getConToken('provincias/$depId');
+    final response = await getConToken('ubigeo/provincias/$depId');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return List<Map<String, dynamic>>.from(data);
@@ -100,11 +100,26 @@ class ApiService {
   }
 
   Future<List<Map<String, dynamic>>> getDistritos(String provId) async {
-    final response = await getConToken('distritos/$provId');
+    final response = await getConToken('ubigeo/distritos/$provId');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return List<Map<String, dynamic>>.from(data);
     }
     return [];
   }
+
+Future<Map<String, dynamic>> consultarDni(String dni) async {
+  final response = await postConToken(
+    'consultarDni',
+    {'dni': dni},
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data;
+  } else {
+    throw Exception("Error al consultar DNI: ${response.statusCode}");
+  }
+}
+
 }
