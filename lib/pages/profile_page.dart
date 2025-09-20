@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Paleta de colores combinable
   final Color colorBase = const Color(0xFF459F38);   // Verde base (botones)
-  final Color colorOscuro = const Color(0xFF2E6B26); // Verde oscuro (header)
+  final Color colorOscuro = const Color(0xFF459F38); // Verde oscuro (header)
   final Color colorFondo = const Color(0xFFF5F5F5);  // Fondo blanco neutro
   final Color colorTexto = const Color(0xFF4B4B4B);  // Gris oscuro para textos secundarios
   final Color colorError = const Color(0xFFE63946);  // Rojo para errores
