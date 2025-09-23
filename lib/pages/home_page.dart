@@ -326,6 +326,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             value: 'accidente', 
                             child: Text('🚗 Accidente', style: TextStyle(color: Colors.black)),
                           ),
+						  DropdownMenuItem(
+                            value: 'educacion', 
+                            child: Text('🚗 Educación', style: TextStyle(color: Colors.black)),
+                          ),
                           DropdownMenuItem(
                             value: 'otros', 
                             child: Text('❓ Otros', style: TextStyle(color: Colors.black)),
