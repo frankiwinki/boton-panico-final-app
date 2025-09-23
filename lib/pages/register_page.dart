@@ -157,7 +157,7 @@ class _RegisterPageState extends State<RegisterPage> {
     VoidCallback? onBlur,
   }) {
     final focusNode = FocusNode();
-    
+
     if (onBlur != null) {
       focusNode.addListener(() {
         if (!focusNode.hasFocus) {
@@ -182,23 +182,13 @@ class _RegisterPageState extends State<RegisterPage> {
         focusNode: focusNode,
         keyboardType: keyboardType,
         obscureText: obscureText,
-        style: const TextStyle(
-          fontSize: 18,
-          color: textColor,
-        ),
+        style: const TextStyle(fontSize: 18, color: textColor),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(
-            color: placeholderColor,
-            fontSize: 18,
-          ),
+          hintStyle: const TextStyle(color: placeholderColor, fontSize: 18),
           prefixIcon: Container(
             margin: const EdgeInsets.all(12),
-            child: Icon(
-              icon,
-              color: placeholderColor,
-              size: 24,
-            ),
+            child: Icon(icon, color: placeholderColor, size: 24),
           ),
           suffixIcon: suffixIcon,
           filled: true,
@@ -209,38 +199,23 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Color(0xFFE5E7EB),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Color(0xFFE5E7EB),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: primaryColor,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: primaryColor, width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
         ),
         validator: validator,
@@ -270,23 +245,13 @@ class _RegisterPageState extends State<RegisterPage> {
       child: DropdownButtonFormField<String>(
         value: value,
         isExpanded: true,
-        style: const TextStyle(
-          fontSize: 18,
-          color: textColor,
-        ),
+        style: const TextStyle(fontSize: 18, color: textColor),
         decoration: InputDecoration(
           hintText: label,
-          hintStyle: const TextStyle(
-            color: placeholderColor,
-            fontSize: 18,
-          ),
+          hintStyle: const TextStyle(color: placeholderColor, fontSize: 18),
           prefixIcon: Container(
             margin: const EdgeInsets.all(12),
-            child: Icon(
-              icon,
-              color: placeholderColor,
-              size: 24,
-            ),
+            child: Icon(icon, color: placeholderColor, size: 24),
           ),
           filled: true,
           fillColor: inputBgColor,
@@ -296,24 +261,15 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Color(0xFFE5E7EB),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Color(0xFFE5E7EB),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: primaryColor,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: primaryColor, width: 2),
           ),
         ),
         items: items
@@ -352,23 +308,13 @@ class _RegisterPageState extends State<RegisterPage> {
       child: DropdownButtonFormField<String>(
         value: value,
         isExpanded: true,
-        style: const TextStyle(
-          fontSize: 18,
-          color: textColor,
-        ),
+        style: const TextStyle(fontSize: 18, color: textColor),
         decoration: InputDecoration(
           hintText: label,
-          hintStyle: const TextStyle(
-            color: placeholderColor,
-            fontSize: 18,
-          ),
+          hintStyle: const TextStyle(color: placeholderColor, fontSize: 18),
           prefixIcon: Container(
             margin: const EdgeInsets.all(12),
-            child: Icon(
-              icon,
-              color: placeholderColor,
-              size: 24,
-            ),
+            child: Icon(icon, color: placeholderColor, size: 24),
           ),
           filled: true,
           fillColor: inputBgColor,
@@ -378,24 +324,15 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Color(0xFFE5E7EB),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Color(0xFFE5E7EB),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 2),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: primaryColor,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: primaryColor, width: 2),
           ),
         ),
         items: items
@@ -440,7 +377,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () => context.pop(),
+                        onTap: () {
+                          GoRouter.of(context).go('/login');
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           child: const Icon(
@@ -499,7 +438,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     onChanged: (value) {
                                       setState(() => selectedTipoDoc = value);
                                     },
-                                    validator: (value) => value == null ? 'Campo requerido' : null,
+                                    validator: (value) => value == null
+                                        ? 'Campo requerido'
+                                        : null,
                                   ),
                                   const SizedBox(height: 24),
 
@@ -511,7 +452,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     keyboardType: TextInputType.number,
                                     onBlur: _consultarDni,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'El número de documento es requerido';
                                       }
                                       return null;
@@ -525,7 +467,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: 'Nombres',
                                     icon: Icons.person,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Los nombres son requeridos';
                                       }
                                       return null;
@@ -539,7 +482,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: 'Apellido paterno',
                                     icon: Icons.person_outline,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'El apellido paterno es requerido';
                                       }
                                       return null;
@@ -553,7 +497,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: 'Apellido materno',
                                     icon: Icons.person_outline,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'El apellido materno es requerido';
                                       }
                                       return null;
@@ -577,7 +522,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     icon: Icons.phone,
                                     keyboardType: TextInputType.phone,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'El celular es requerido';
                                       }
                                       if (value.trim().length < 9) {
@@ -628,7 +574,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     onChanged: (value) {
                                       setState(() => selectedDistrito = value);
                                     },
-                                    validator: (value) => value == null ? 'Campo requerido' : null,
+                                    validator: (value) => value == null
+                                        ? 'Campo requerido'
+                                        : null,
                                   ),
                                   const SizedBox(height: 24),
 
@@ -638,7 +586,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: 'Dirección exacta',
                                     icon: Icons.home_outlined,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'La dirección es requerida';
                                       }
                                       return null;
@@ -683,15 +632,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                     child: _loading
                                         ? const Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               SizedBox(
                                                 width: 20,
                                                 height: 20,
                                                 child: CircularProgressIndicator(
                                                   strokeWidth: 2,
-                                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                                      Colors.white),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                        Color
+                                                      >(Colors.white),
                                                 ),
                                               ),
                                               SizedBox(width: 12),
@@ -705,7 +657,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                             ],
                                           )
                                         : const Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 'REGISTRAR',
