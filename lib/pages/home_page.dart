@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import '../services/api_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +14,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isLoading = false;
   String? _tipoEmergencia;
+  File? _imagenSeleccionada;
+  final ImagePicker _picker = ImagePicker();
   final TextEditingController _descripcionController = TextEditingController();
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -23,13 +27,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
     _pulseController.repeat(reverse: true);
   }
 
@@ -67,23 +67,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future<void> _confirmarEnvio() async {
     const accentColor = Color(0xFFFFC107);
-    
+
     _pulseController.stop();
-    
+
     final confirmacion = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
             SizedBox(width: 12),
             Text(
               '¿Estás seguro?',
-              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -95,9 +96,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
         actions: [
           TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.grey,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Colors.grey),
             child: const Text('Cancelar'),
             onPressed: () {
               Navigator.of(context).pop(false);
@@ -111,7 +110,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text('Sí, confirmar', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Sí, confirmar',
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () {
               Navigator.of(context).pop(true);
             },
@@ -138,6 +140,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         coordenadas,
         tipo: _tipoEmergencia ?? 'sin especificar',
         descripcion: _descripcionController.text,
+        imagen: _imagenSeleccionada, // 👉 pasamos la foto si existe
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -148,11 +151,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : 'Error al enviar la emergencia',
             style: const TextStyle(color: Colors.white),
           ),
-          backgroundColor: success ? const Color(0xFF459F38) : const Color(0xFFE63946),
+          backgroundColor: success
+              ? const Color(0xFF459F38)
+              : const Color(0xFFE63946),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
 
@@ -160,6 +163,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         setState(() {
           _tipoEmergencia = null;
           _descripcionController.clear();
+          _imagenSeleccionada = null; // 👉 limpiar preview después de enviar
         });
       }
     } catch (e) {
@@ -168,9 +172,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           content: Text('Error: ${e.toString()}'),
           backgroundColor: const Color(0xFFE63946),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
     } finally {
@@ -179,11 +181,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> _seleccionarImagen() async {
+    final XFile? imagen = await _picker.pickImage(source: ImageSource.gallery);
+    if (imagen != null) {
+      setState(() {
+        _imagenSeleccionada = File(imagen.path);
+      });
+    }
+  }
+
+  Future<void> _tomarFoto() async {
+    final XFile? imagen = await _picker.pickImage(source: ImageSource.camera);
+    if (imagen != null) {
+      setState(() {
+        _imagenSeleccionada = File(imagen.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF459F38);
     const accentColor = Color(0xFFFFC107);
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFF459F38), // Asegurar fondo verde
       body: Container(
@@ -192,11 +212,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF5CB85C),
-              Color(0xFF459F38),
-              Color(0xFF3A8B2F),
-            ],
+            colors: [Color(0xFF5CB85C), Color(0xFF459F38), Color(0xFF3A8B2F)],
           ),
         ),
         child: Stack(
@@ -250,7 +266,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            
+
             // Contenido principal
             SafeArea(
               child: SingleChildScrollView(
@@ -258,7 +274,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: Column(
                   children: [
                     const SizedBox(height: 60),
-                    
+
                     const Text(
                       'Emergencia',
                       style: TextStyle(
@@ -300,7 +316,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(25),
                             borderSide: BorderSide.none,
                           ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 18,
+                          ),
                           hintText: 'Tipo de emergencia',
                           hintStyle: TextStyle(
                             color: Colors.white.withOpacity(0.8),
@@ -311,28 +330,46 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             color: Colors.white.withOpacity(0.8),
                           ),
                         ),
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                         iconEnabledColor: Colors.white.withOpacity(0.8),
                         items: const [
                           DropdownMenuItem(
-                            value: 'incendio', 
-                            child: Text('🔥 Incendio', style: TextStyle(color: Colors.black)),
+                            value: 'violencia_familiar',
+                            child: Text(
+                              'Violencia Familiar',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                           DropdownMenuItem(
-                            value: 'robo', 
-                            child: Text('🚨 Robo', style: TextStyle(color: Colors.black)),
+                            value: 'robo',
+                            child: Text(
+                              'Robo',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                           DropdownMenuItem(
-                            value: 'accidente', 
-                            child: Text('🚗 Accidente', style: TextStyle(color: Colors.black)),
-                          ),
-						  DropdownMenuItem(
-                            value: 'educacion', 
-                            child: Text('🚗 Educación', style: TextStyle(color: Colors.black)),
+                            value: 'accidente',
+                            child: Text(
+                              'Accidente',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                           DropdownMenuItem(
-                            value: 'otros', 
-                            child: Text('❓ Otros', style: TextStyle(color: Colors.black)),
+                            value: 'educacion',
+                            child: Text(
+                              'Educación',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 'otros',
+                            child: Text(
+                              'Otros',
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ],
                         onChanged: (value) {
@@ -357,7 +394,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       child: TextField(
                         controller: _descripcionController,
                         maxLines: 4,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.transparent,
@@ -381,6 +421,60 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+                    // Adjuntar foto
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: _tomarFoto,
+                            icon: const Icon(Icons.camera_alt),
+                            label: const Text("Tomar foto"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF459F38),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: _seleccionarImagen,
+                            icon: const Icon(Icons.photo_library),
+                            label: const Text("Galería"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF459F38),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Preview
+                    if (_imagenSeleccionada != null)
+                      Container(
+                        margin: const EdgeInsets.only(top: 10, bottom: 30),
+                        height: 200,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.4),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.file(
+                            _imagenSeleccionada!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        ),
+                      ),
 
                     // Botón de emergencia
                     AnimatedBuilder(
@@ -393,7 +487,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             child: Container(
                               width: double.infinity,
                               height: 60,
-                              margin: const EdgeInsets.symmetric(horizontal: 20),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 gradient: const LinearGradient(
@@ -413,12 +509,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               child: isLoading
                                   ? const Center(
                                       child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
                                         strokeWidth: 3,
                                       ),
                                     )
                                   : const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.emergency,
@@ -444,7 +544,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
 
                     const SizedBox(height: 30),
-                    
+
                     // Mensaje de advertencia
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

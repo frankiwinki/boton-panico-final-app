@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
 
   Future<bool> checkLogin() async {
     final prefs = await SharedPreferences.getInstance();
-    // Añadimos un pequeño delay para mostrar la animación
     await Future.delayed(const Duration(milliseconds: 2000));
-    return prefs.getBool('loggedIn') ?? false;
+    final token = prefs.getString('token');
+    return token != null && token.isNotEmpty;
   }
 
   @override
@@ -230,20 +230,11 @@ class _SplashScreenState extends State<SplashScreen>
                                   children: [
                                     Image.asset(
                                       'assets/images/logo.png',
-                                      width: 70,
-                                      height: 70,
+                                      width: 110,
+                                      height: 110,
                                       fit: BoxFit.contain,
                                     ),
                                     const SizedBox(height: 4),
-                                    Text(
-                                      'ALLIM',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF459f38),
-                                        letterSpacing: 1.5,
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),

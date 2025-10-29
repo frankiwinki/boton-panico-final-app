@@ -1,5 +1,6 @@
 // services/api_service.dart
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,13 +37,13 @@ class ApiService {
     final token = await getToken();
     final url = Uri.parse('$baseUrl/$endpoint');
 
-    return http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
+    // ✅ VALIDACIÓN: Solo agregar header si hay token válido
+    Map<String, String> headers = {'Content-Type': 'application/json'};
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    return http.get(url, headers: headers);
   }
 
   Future<http.Response> postConToken(
@@ -52,18 +53,54 @@ class ApiService {
     final token = await getToken();
     final url = Uri.parse('$baseUrl/$endpoint');
 
+    // ✅ VALIDACIÓN: Solo agregar header si hay token válido
+    Map<String, String> headers = {'Content-Type': 'application/json'};
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
     return http.post(
       url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: jsonEncode(data),
     );
   }
 
+  Future<http.StreamedResponse> postMultipartConToken(
+    String endpoint, {
+    required Map<String, String> fields,
+    File? imagen,
+  }) async {
+    final token = await getToken();
+    final url = Uri.parse('$baseUrl/$endpoint');
+
+    var request = http.MultipartRequest('POST', url);
+    
+    // ✅ VALIDACIÓN: Solo agregar header si hay token válido
+    if (token != null && token.isNotEmpty) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
+
+    // Campos normales
+    request.fields.addAll(fields);
+
+    // Adjuntar imagen si existe
+    if (imagen != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('imagen', imagen.path),
+      );
+    }
+
+    print("📌 Campos a enviar: $fields");
+    if (imagen != null) {
+      print("📸 Imagen path: ${imagen.path}");
+    }
+
+    return request.send();
+  }
+
   Future<bool> registrarUsuario(Map<String, dynamic> data) async {
-    final response = await postConToken('register', data);
+    final response = await postConToken('registerUser', data);
     return response.statusCode == 201;
   }
 
@@ -71,12 +108,17 @@ class ApiService {
     String coordenadas, {
     required String tipo,
     required String descripcion,
+    File? imagen,
   }) async {
-    final response = await postConToken('emergencies', {
-      'coordenadas': coordenadas,
-      'tipo': tipo,
-      'descripcion': descripcion,
-    });
+    final response = await postMultipartConToken(
+      "emergencies",
+      fields: {
+        "coordenadas": coordenadas,
+        "tipo_emergencia": tipo, // 👈 igual que en tu backend
+        "descripcion": descripcion,
+      },
+      imagen: imagen,
+    );
 
     return response.statusCode == 201;
   }
@@ -108,18 +150,14 @@ class ApiService {
     return [];
   }
 
-Future<Map<String, dynamic>> consultarDni(String dni) async {
-  final response = await postConToken(
-    'consultarDni',
-    {'dni': dni},
-  );
+  Future<Map<String, dynamic>> consultarDni(String dni) async {
+    final response = await postConToken('consultarDni', {'dni': dni});
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return data;
-  } else {
-    throw Exception("Error al consultar DNI: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception("Error al consultar DNI: ${response.statusCode}");
+    }
   }
-}
-
 }
