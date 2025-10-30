@@ -292,9 +292,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         color: Colors.white.withOpacity(0.9),
                       ),
                     ),
-
                     const SizedBox(height: 50),
-
                     // Tipo de emergencia
                     Container(
                       margin: const EdgeInsets.only(bottom: 20),
@@ -331,7 +329,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           ),
                         ),
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 184, 174, 174),
                           fontSize: 16,
                         ),
                         iconEnabledColor: Colors.white.withOpacity(0.8),
