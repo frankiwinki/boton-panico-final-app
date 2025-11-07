@@ -68,13 +68,13 @@ class _RegisterPageState extends State<RegisterPage> {
       'direccion': direccionCtrl.text,
     };
 
-    final success = await api.registrarUsuario(data);
+    final result = await api.registrarUsuario(data);
 
     if (!mounted) return;
 
     setState(() => _loading = false);
 
-    if (success) {
+    if (result['success'] == true) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Cuenta registrada correctamente'),
@@ -83,9 +83,24 @@ class _RegisterPageState extends State<RegisterPage> {
       );
       context.go('/login');
     } else {
+      String errorMessage = 'Error al registrar';
+      
+      if (result['errors'] != null) {
+        final errors = result['errors'] as Map<String, dynamic>;
+        if (errors['num_doc'] != null) {
+          errorMessage = 'El número de documento ya está registrado';
+        } else if (errors['email'] != null) {
+          errorMessage = 'El correo electrónico ya está registrado';
+        } else if (errors['celular'] != null) {
+          errorMessage = 'El número de celular ya está registrado';
+        } else {
+          errorMessage = errors.values.first[0].toString();
+        }
+      }
+      
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al registrar'),
+        SnackBar(
+          content: Text(errorMessage),
           backgroundColor: Colors.red,
         ),
       );
@@ -445,19 +460,48 @@ class _RegisterPageState extends State<RegisterPage> {
                                   const SizedBox(height: 24),
 
                                   // Número de documento
-                                  _buildInputField(
-                                    controller: dniCtrl,
-                                    hintText: 'N° Documento',
-                                    icon: Icons.badge_outlined,
-                                    keyboardType: TextInputType.number,
-                                    onBlur: _consultarDni,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.trim().isEmpty) {
-                                        return 'El número de documento es requerido';
-                                      }
-                                      return null;
-                                    },
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: _buildInputField(
+                                          controller: dniCtrl,
+                                          hintText: 'N° Documento',
+                                          icon: Icons.badge_outlined,
+                                          keyboardType: TextInputType.number,
+                                          onBlur: _consultarDni,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return 'El número de documento es requerido';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: primaryColor,
+                                          borderRadius: BorderRadius.circular(16),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.05),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: IconButton(
+                                          onPressed: _consultarDni,
+                                          icon: const Icon(
+                                            Icons.search,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                          padding: const EdgeInsets.all(16),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(height: 24),
 

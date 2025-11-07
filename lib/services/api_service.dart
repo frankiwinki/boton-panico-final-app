@@ -99,10 +99,26 @@ class ApiService {
     return request.send();
   }
 
-  Future<bool> registrarUsuario(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> registrarUsuario(Map<String, dynamic> data) async {
+  try {
     final response = await postConToken('registerUser', data);
-    return response.statusCode == 201;
+    
+    if (response.statusCode == 201) {
+      return {'success': true};
+    } else {
+      final body = json.decode(response.body);
+      return {
+        'success': false,
+        'errors': body['errors'] ?? {},
+      };
+    }
+  } catch (e) {
+    return {
+      'success': false,
+      'errors': {'general': ['Error de conexión']},
+    };
   }
+}
 
   Future<bool> enviarEmergencia(
     String coordenadas, {
